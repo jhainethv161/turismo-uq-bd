@@ -1,0 +1,43 @@
+
+SQL*Plus: Release 23.26.3.0.0 - Production on Wed Oct 28 02:28:31 2026
+Version 23.26.3.0.0
+
+Copyright (c) 1982, 2026, Oracle.  All rights reserved.
+
+
+Connected to:
+Oracle AI Database 26ai Free Release 23.26.3.0.0 - Develop, Learn, and Run for Free
+Version 23.26.3.0.0
+
+
+Session altered.
+
+
+Grant succeeded.
+
+El tablespace TS_TURISMOUQ_HIST ya existia.
+
+PL/SQL procedure successfully completed.
+
+
+User altered.
+
+
+TABLESPACE_NAME 	       STATUS	 CONTENTS	       EXTENT_MAN
+------------------------------ --------- --------------------- ----------
+TS_TURISMOUQ_HIST	       ONLINE	 PERMANENT	       LOCAL
+
+
+TABLESPACE_NAME
+------------------------------
+FILE_NAME
+--------------------------------------------------------------------------------
+	MB AUT
+---------- ---
+TS_TURISMOUQ_HIST
+C:\APP\YAMILETH\PRODUCT\26AI\DBHOMEFREE\DATABASE\TS_TURISMOUQ_HIST01.DBF
+	50 YES
+
+
+Disconnected from Oracle AI Database 26ai Free Release 23.26.3.0.0 - Develop, Learn, and Run for Free
+Version 23.26.3.0.0

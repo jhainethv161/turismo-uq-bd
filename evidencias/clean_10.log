@@ -1,0 +1,325 @@
+
+SQL*Plus: Release 23.26.3.0.0 - Production on Wed Oct 28 02:40:17 2026
+Version 23.26.3.0.0
+
+Copyright (c) 1982, 2026, Oracle.  All rights reserved.
+
+Last Successful login time: Wed Oct 28 2026 02:40:16 -05:00
+
+Connected to:
+Oracle AI Database 26ai Free Release 23.26.3.0.0 - Develop, Learn, and Run for Free
+Version 23.26.3.0.0
+
+=== P0. Datos escogidos para las pruebas ===
+Habitacion	      : 4 (alojamiento 1)
+Segunda habitacion    : 2
+Corte de temporada    : 2026-12-15 (temporada 77 -> 78)
+Tarifa antes del corte: 397000
+Tarifa desde el corte : 552000
+Cliente 	      : 1
+Total de la estadia   : 2692000
+Pago parcial de prueba: 100000
+
+PL/SQL procedure successfully completed.
+
+
+=== T1. Detalle noche por noche de la estadia de prueba ===
+
+NOCHE		   TEMPORADA							TIPO	   VALOR_NOCHE
+------------------ ------------------------------------------------------------ ---------- -----------
+11-DEC-26	   Media 2026: 01-dic al 14-dic 				Media		397000
+12-DEC-26	   Media 2026: 01-dic al 14-dic 				Media		397000
+13-DEC-26	   Media 2026: 01-dic al 14-dic 				Media		397000
+14-DEC-26	   Media 2026: 01-dic al 14-dic 				Media		397000
+15-DEC-26	   Diciembre-enero 2026-2027					Alta		552000
+16-DEC-26	   Diciembre-enero 2026-2027					Alta		552000
+
+6 rows selected.
+
+=== T1. fn_valor_estadia cruzando temporadas ===
+Funcion        : 2692000
+4*v1 + 2*v2    : 2692000
+Consulta SQL   : 2692000
+Precio unico v1: 2382000  (incorrecto)
+Precio unico v2: 3312000  (incorrecto)
+T1 OK
+
+PL/SQL procedure successfully completed.
+
+=== T2. fn_valor_estadia con check-out = check-in (espera -20002) ===
+T2 OK: ORA-20002: El check-out (2026-12-15) debe ser posterior al check-in (2026-12-15)
+
+PL/SQL procedure successfully completed.
+
+=== T3. fn_valor_estadia en fechas sin temporada (espera -20010) ===
+T3 OK: ORA-20010: No hay temporada definida para la noche del 2099-01-01
+
+PL/SQL procedure successfully completed.
+
+=== T4. sp_crear_reserva exitosa ===
+Reserva creada : 25511 (pendiente)
+Noches	       : 6 (esperado 6)
+Valor estadia  : 2692000 (esperado 2692000)
+PAGO_TOTAL     : subtotal 2692000, total 2692000, estado pendiente
+T4 OK
+
+PL/SQL procedure successfully completed.
+
+=== T4. Noches registradas (valor congelado por noche) ===
+
+FECHA		   TEMPORADA							VALOR_NOCHE  ID_TARIFA
+------------------ ------------------------------------------------------------ ----------- ----------
+11-DEC-26	   Media 2026: 01-dic al 14-dic 				     397000	   311
+12-DEC-26	   Media 2026: 01-dic al 14-dic 				     397000	   311
+13-DEC-26	   Media 2026: 01-dic al 14-dic 				     397000	   311
+14-DEC-26	   Media 2026: 01-dic al 14-dic 				     397000	   311
+15-DEC-26	   Diciembre-enero 2026-2027					     552000	   312
+16-DEC-26	   Diciembre-enero 2026-2027					     552000	   312
+
+6 rows selected.
+
+=== T5. Check-out anterior al check-in (espera -20002) ===
+T5 OK: ORA-20002: El check-out (2026-12-18) debe ser posterior al check-in (2026-12-20)
+
+PL/SQL procedure successfully completed.
+
+=== T6. Capacidad excedida (espera -20004) ===
+T6 OK: ORA-20004: Capacidad excedida: la habitacion 4 admite 4 huespedes y se solicitaron 5
+
+PL/SQL procedure successfully completed.
+
+=== T7. Habitacion no disponible (espera -20005) ===
+T7 OK: ORA-20005: La habitacion 4 no esta disponible entre el 2026-12-14 y el 2026-12-16
+Reservas antes/despues: 25501 / 25501  -> OK, no quedo cabecera huerfana
+
+PL/SQL procedure successfully completed.
+
+=== T8. Trigger de fila: insercion directa solapada (espera -20005) ===
+T8 OK: ORA-20005: [TRG_RH_NO_SOLAPE] La habitacion 4 ya esta ocupada por la reserva 25511 en el rango 2026-12-14 a 2026-12-16
+
+PL/SQL procedure successfully completed.
+
+=== T9. Check-in el dia del check-out de otra reserva (espera exito) ===
+T9 OK: reserva 25515 creada del 2026-12-17 al 2026-12-19
+
+PL/SQL procedure successfully completed.
+
+=== T10. sp_agregar_habitacion (reserva de grupo) ===
+Linea agregada : 29803
+Suma lineas    : 5596000 / Total PAGO_TOTAL: 5596000
+T10a OK
+T10b OK: ORA-20008: Las fechas de la habitacion deben estar dentro del rango de la reserva (2026-12-11 a 2026-12-17)
+
+PL/SQL procedure successfully completed.
+
+=== T10. Lineas de la reserva de grupo ===
+
+	ID ID_HABITACION FECHA_CHECK_IN     FECHA_CHECK_OUT    NUMERO_HUESPEDES VALOR_ESTADIA
+---------- ------------- ------------------ ------------------ ---------------- -------------
+     29800	       4 11-DEC-26	    17-DEC-26			      2       2692000
+     29803	       2 12-DEC-26	    17-DEC-26			      1       2904000
+
+2 rows selected.
+
+
+=== T11. Auditoria de TARIFA (sube 10.000 todas las tarifas de la habitacion) ===
+
+78 rows updated.
+
+
+ ID_TARIFA ID_TEMPORADA OPERAC VALOR_ANTERIOR VALOR_NUEVO USUARIO_BD
+---------- ------------ ------ -------------- ----------- --------------------------------------------------------------------------------------------------------------------------------
+USUARIO_SO
+--------------------------------------------------------------------------------------------------------------------------------
+EQUIPO																 FECHA_CAMBIO
+-------------------------------------------------------------------------------------------------------------------------------- -------------------
+       235	      1 UPDATE	       451000	   461000 TURISMOUQ
+Yamileth
+WORKGROUP\DESKTOP-72LCK77													 2026-10-28 02:40:29
+
+       236	      2 UPDATE	       246000	   256000 TURISMOUQ
+Yamileth
+WORKGROUP\DESKTOP-72LCK77													 2026-10-28 02:40:29
+
+       237	      3 UPDATE	       484000	   494000 TURISMOUQ
+Yamileth
+WORKGROUP\DESKTOP-72LCK77													 2026-10-28 02:40:29
+
+       238	      4 UPDATE	       246000	   256000 TURISMOUQ
+Yamileth
+WORKGROUP\DESKTOP-72LCK77													 2026-10-28 02:40:29
+
+       239	      5 UPDATE	       484000	   494000 TURISMOUQ
+Yamileth
+WORKGROUP\DESKTOP-72LCK77													 2026-10-28 02:40:29
+
+       240	      6 UPDATE	       246000	   256000 TURISMOUQ
+Yamileth
+WORKGROUP\DESKTOP-72LCK77													 2026-10-28 02:40:29
+
+       241	      7 UPDATE	       484000	   494000 TURISMOUQ
+Yamileth
+WORKGROUP\DESKTOP-72LCK77													 2026-10-28 02:40:29
+
+       242	      8 UPDATE	       348000	   358000 TURISMOUQ
+Yamileth
+WORKGROUP\DESKTOP-72LCK77													 2026-10-28 02:40:29
+
+
+8 rows selected.
+
+
+OPERAC FILAS_AUDITADAS
+------ ---------------
+UPDATE		    78
+
+1 row selected.
+
+=== T11. Verificacion ===
+Tarifas de la habitacion: 78 / filas auditadas: 78
+T11a OK
+Valor guardado en la reserva: 2692000 / valor con la tarifa nueva: 2752000
+T11b OK: el precio vendido quedo congelado
+Auditoria INSERT/DELETE (temporada temporal 81): 1/1 (esperado 1/1)
+T11c OK
+
+PL/SQL procedure successfully completed.
+
+=== T12. Pago parcial, reembolso y cancelacion ===
+Pagado 100000 de 5596000 -> PAGO_TOTAL: abonado (esperado ABONADO)
+Reserva pagada?: N (esperado N)
+T12a OK
+10 dias antes -> reembolso 80000  OK
+6 dias antes -> reembolso 80000  OK
+5 dias antes -> reembolso 0  OK
+2 dias antes -> reembolso 0  OK
+sp_cancelar_reserva -> reembolso 80000, estado cancelada, lineas sin cancelar 0
+PAGO_TOTAL: reembolsado, total 5596000 (el total original no se altera)
+Filas de reembolso en PAGO: 1, monto 80000
+T12b OK
+Habitacion liberada?: S (esperado S)
+Cabecera CANCELADA con linea CONFIRMADA -> disponible: S (esperado S)
+T12c OK
+T12d OK: ORA-20009: Una reserva CANCELADA no se puede cancelar
+T12e OK: ORA-20009: No se puede recalcular una reserva CANCELADA: su valor ya quedo cerrado
+
+PL/SQL procedure successfully completed.
+
+=== T12. Movimientos de PAGO de la reserva cancelada ===
+
+	ID FECHA		   MONTO ESTADO_PAGO	      METODO
+---------- ------------------ ---------- -------------------- ------------------------------
+     36090 28-OCT-26              100000 exitoso              Tarjeta de cr├®dito
+     36091 01-DEC-26               80000 reembolsado          Tarjeta de cr├®dito
+
+2 rows selected.
+
+=== T13. Resenas ===
+T13a OK: ORA-20020: [TRG_RESENA_COMPLETADA] La reserva 25511 esta CANCELADA: solo se pueden resenar reservas COMPLETADAS
+T13b OK: resena aceptada para la reserva completada 3
+
+PL/SQL procedure successfully completed.
+
+=== T14. Servicio de otro alojamiento (espera -20007) ===
+T14 OK: ORA-20007: [TRG_RS_COHERENCIA] El servicio 5 no pertenece al alojamiento de la reserva 25515
+
+PL/SQL procedure successfully completed.
+
+=== T15. Liquidacion mensual 2026-09 ===
+=== Liquidacion 2026-09 ===
+Alojamientos liquidados : 60
+Alojamientos con ventas : 56
+Ingreso total del mes	: 384,597,000.00
+Filas generadas: 60 (alojamientos: 60)
+Estadia liquidada: 297105000 / consulta directa: 297105000
+Servicios liquidados: 87492000 / consulta directa: 87492000
+Noches de lineas canceladas en cabeceras activas (excluidas): 19
+T15a OK
+=== Liquidacion 2026-09 ===
+Alojamientos liquidados : 60
+Alojamientos con ventas : 56
+Ingreso total del mes	: 384,597,000.00
+T15b OK: reproceso sin duplicados
+
+PL/SQL procedure successfully completed.
+
+=== T15. Top 10 alojamientos del mes liquidado ===
+
+ID_ALOJAMIENTO NOMBRE_COMERCIAL 										    NOCHES_OCUPADAS NUM_RESERVAS INGRESO_ESTADIA INGRESO_SERVICIOS INGRESO_TOTAL
+-------------- ---------------------------------------------------------------------------------------------------- --------------- ------------ --------------- ----------------- -------------
+            13 Hotel Bamb├║ Real                                                                                                  82           29        22487000           7407000      29894000
+	    35 Hotel La Arboleda												 89	      35	17281000	   6978000	24259000
+	    36 Hotel Mirador del Cocora 											 72	      25	14658000	   8392000	23050000
+	    41 Hotel El Refugio 												 71	      24	15924000	   5134000	21058000
+             7 Glamping Villa Caf├®                                                                                               40           11        14327000           5232000      19559000
+	    14 Hotel El Roble													 45	      17	14075000	   4184000	18259000
+            28 Glamping Rinc├│n Cafetero                                                                                          29           10        14244000           3776000      18020000
+	    12 Hotel La Cascada 												 45	      15	13041000	   3772000	16813000
+            31 Finca El Para├¡so                                                                                                  33           12        12514000           3003000      15517000
+            27 Glamping El Balc├│n                                                                                                22            6         9838000           2891000      12729000
+
+10 rows selected.
+
+=== T16. Archivado al historico (corte 2025-01-01) ===
+Lineas archivadas: 8543 (esperadas: 8543)
+T16a OK
+Segunda ejecucion: 0 (esperado 0, no duplica)
+T16b OK
+Archivadas con cabecera activa: 0 (esperado 0)
+T16c OK
+
+PL/SQL procedure successfully completed.
+
+=== T16. Segmentos del historico y su tablespace ===
+
+SEGMENT_NAME															 SEGMENT_TYPE	    TABLESPACE_NAME			   MB
+-------------------------------------------------------------------------------------------------------------------------------- ------------------ ------------------------------ ----------
+RESERVA_HISTORICO														 TABLE		    TS_TURISMOUQ_HIST			    2
+PK_RESERVA_HISTORICO														 INDEX		    TS_TURISMOUQ_HIST			  .31
+
+2 rows selected.
+
+
+Rollback complete.
+
+
+PL/SQL procedure successfully completed.
+
+=== T17. Vista materializada ===
+Alojamiento 35, mes 2025-12: MV=258 / directo=258
+T17a OK
+Total del mes 2025-12: MV=2897 / directo=2897
+T17b OK
+Estado de la MV: FRESH (esperado FRESH)
+T17c OK
+
+PL/SQL procedure successfully completed.
+
+=== T17. Ocupacion del mes con mas noches, por municipio ===
+
+MUNICIPIO						       OCUPADAS DISPONIBLES PCT_OCUPACION
+------------------------------------------------------------ ---------- ----------- -------------
+Salento 							    718        2460	    29.19
+Filandia							    318        1110	    28.65
+Montenegro							    659        2430	    27.12
+Calarc├í                                                             256        1230         20.81
+Quimbaya							    302        1620	    18.64
+Armenia 							    878        5010	    17.52
+Circasia							     94 	540	    17.41
+Pijao								     43 	270	    15.93
+La Tebaida							    151        1080	    13.98
+Buenavista							     12 	 90	    13.33
+C├│rdoba                                                               5          90          5.56
+G├®nova                                                                5         120          4.17
+
+12 rows selected.
+
+
+MVIEW_NAME															 LAST_REFRESH_DATE  STALENESS
+-------------------------------------------------------------------------------------------------------------------------------- ------------------ -------------------
+MV_OCUPACION_MENSUAL														 28-OCT-26	    FRESH
+
+1 row selected.
+
+SQL> Disconnected from Oracle AI Database 26ai Free Release 23.26.3.0.0 - Develop, Learn, and Run for Free
+Version 23.26.3.0.0

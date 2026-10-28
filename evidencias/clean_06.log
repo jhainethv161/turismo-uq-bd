@@ -1,0 +1,83 @@
+
+SQL*Plus: Release 23.26.3.0.0 - Production on Wed Oct 28 02:40:16 2026
+Version 23.26.3.0.0
+
+Copyright (c) 1982, 2026, Oracle.  All rights reserved.
+
+Last Successful login time: Wed Oct 28 2026 02:39:50 -05:00
+
+Connected to:
+Oracle AI Database 26ai Free Release 23.26.3.0.0 - Develop, Learn, and Run for Free
+Version 23.26.3.0.0
+
+Tabla AUDITORIA_TARIFA eliminada.
+Tabla LIQUIDACION_MENSUAL eliminada.
+Tabla RESERVA_HISTORICO eliminada.
+
+PL/SQL procedure successfully completed.
+
+
+Table created.
+
+
+Comment created.
+
+
+Comment created.
+
+
+Comment created.
+
+
+Comment created.
+
+
+Comment created.
+
+
+Table created.
+
+
+Comment created.
+
+
+Comment created.
+
+
+Comment created.
+
+
+Comment created.
+
+
+Comment created.
+
+
+Comment created.
+
+
+Table created.
+
+
+Comment created.
+
+
+Comment created.
+
+
+TABLE_NAME
+--------------------------------------------------------------------------------
+TABLESPACE_NAME
+------------------------------
+AUDITORIA_TARIFA
+USERS
+
+LIQUIDACION_MENSUAL
+USERS
+
+RESERVA_HISTORICO
+TS_TURISMOUQ_HIST
+
+
+SQL> Disconnected from Oracle AI Database 26ai Free Release 23.26.3.0.0 - Develop, Learn, and Run for Free
+Version 23.26.3.0.0

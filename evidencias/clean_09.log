@@ -1,0 +1,114 @@
+
+SQL*Plus: Release 23.26.3.0.0 - Production on Wed Oct 28 02:40:16 2026
+Version 23.26.3.0.0
+
+Copyright (c) 1982, 2026, Oracle.  All rights reserved.
+
+Last Successful login time: Wed Oct 28 2026 02:40:16 -05:00
+
+Connected to:
+Oracle AI Database 26ai Free Release 23.26.3.0.0 - Develop, Learn, and Run for Free
+Version 23.26.3.0.0
+
+MV_OCUPACION_MENSUAL eliminada.
+
+PL/SQL procedure successfully completed.
+
+
+Materialized view created.
+
+
+Comment created.
+
+
+Index created.
+
+Job JOB_REFRESCO_MV_OCUPACION creado.
+
+PL/SQL procedure successfully completed.
+
+
+MVIEW_NAME
+--------------------------------------------------------------------------------
+REFRESH_M REFRESH_ BUILD_MOD LAST_REFRESH_DATE	STALENESS
+--------- -------- --------- ------------------ -------------------
+MV_OCUPACION_MENSUAL
+DEMAND	  COMPLETE IMMEDIATE 28-OCT-26		FRESH
+
+
+
+JOB_NAME
+--------------------------------------------------------------------------------
+ENABL STATE
+----- --------------------
+REPEAT_INTERVAL
+--------------------------------------------------------------------------------
+NEXT_RUN_DATE
+---------------------------------------------------------------------------
+JOB_REFRESCO_MV_OCUPACION
+TRUE  SCHEDULED
+FREQ=DAILY; BYHOUR=2; BYMINUTE=0; BYSECOND=0
+29-OCT-26 02.00.00.000000 AM -05:00
+
+
+
+MUNICIPIO						     NOCHES_OCUPADAS
+------------------------------------------------------------ ---------------
+NOCHES_DISPONIBLES PCT_OCUPACION
+------------------ -------------
+Pijao									   5
+	       279	    1.79
+
+Montenegro								  44
+	      2511	    1.75
+
+Filandia								  20
+	      1147	    1.74
+
+
+MUNICIPIO						     NOCHES_OCUPADAS
+------------------------------------------------------------ ---------------
+NOCHES_DISPONIBLES PCT_OCUPACION
+------------------ -------------
+Circasia								   8
+	       558	    1.43
+
+Salento 								  29
+	      2542	    1.14
+
+C├│rdoba                                                                    1
+		93	    1.08
+
+
+MUNICIPIO						     NOCHES_OCUPADAS
+------------------------------------------------------------ ---------------
+NOCHES_DISPONIBLES PCT_OCUPACION
+------------------ -------------
+Calarc├í                                                                    8
+	      1271	     .63
+
+Quimbaya								   5
+	      1674	      .3
+
+Armenia 								  13
+	      5177	     .25
+
+
+MUNICIPIO						     NOCHES_OCUPADAS
+------------------------------------------------------------ ---------------
+NOCHES_DISPONIBLES PCT_OCUPACION
+------------------ -------------
+La Tebaida								   0
+	      1116	       0
+
+G├®nova                                                                     0
+	       124	       0
+
+Buenavista								   0
+		93	       0
+
+
+12 rows selected.
+
+SQL> Disconnected from Oracle AI Database 26ai Free Release 23.26.3.0.0 - Develop, Learn, and Run for Free
+Version 23.26.3.0.0

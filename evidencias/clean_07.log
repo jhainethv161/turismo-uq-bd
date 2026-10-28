@@ -1,0 +1,35 @@
+
+SQL*Plus: Release 23.26.3.0.0 - Production on Wed Oct 28 02:40:16 2026
+Version 23.26.3.0.0
+
+Copyright (c) 1982, 2026, Oracle.  All rights reserved.
+
+Last Successful login time: Wed Oct 28 2026 02:40:16 -05:00
+
+Connected to:
+Oracle AI Database 26ai Free Release 23.26.3.0.0 - Develop, Learn, and Run for Free
+Version 23.26.3.0.0
+
+
+Package created.
+
+
+Package body created.
+
+
+OBJECT_NAME
+--------------------------------------------------------------------------------
+OBJECT_TYPE		STATUS
+----------------------- -------
+PKG_TURISMO
+PACKAGE 		VALID
+
+PKG_TURISMO
+PACKAGE BODY		VALID
+
+
+
+no rows selected
+
+SQL> Disconnected from Oracle AI Database 26ai Free Release 23.26.3.0.0 - Develop, Learn, and Run for Free
+Version 23.26.3.0.0
