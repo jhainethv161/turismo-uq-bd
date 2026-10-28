@@ -36,6 +36,9 @@ objetos de programa, tablas de soporte, disparadores y una vista materializada.
 | 09 | `09_vista_materializada.sql` | dueño | `MV_OCUPACION_MENSUAL` y el job de refresco |
 | 10 | `10_pruebas_entrega2.sql` | dueño | Evidencia: pruebas T1–T17 con salida `OK`/`FALLA` |
 
+La numeración de la Entrega 2 empieza en `05` porque ese script agrupa en un solo paso
+los privilegios y el tablespace; no hay un script `04` independiente.
+
 **Regla importante:** el script `08` se ejecuta **después** de la carga de la Entrega 1.
 Si los disparadores existieran antes de `02`, el `INSERT ... SELECT` masivo sobre
 `RESERVA_HABITACION` fallaría con `ORA-04091` (tabla mutante).
