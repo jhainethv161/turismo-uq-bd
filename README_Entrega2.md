@@ -46,8 +46,11 @@ Si los disparadores existieran antes de `02`, el `INSERT ... SELECT` masivo sobr
 ### 2.1 Conexión
 
 ```text
-sqlplus turismouq/TurismoUQ2026@localhost:1521/FREEPDB1
+sqlplus turismouq/tu_clave@localhost:1521/FREEPDB1
 ```
+
+Reemplace `tu_clave` por la clave del esquema. No se publica ninguna clave real en el
+repositorio.
 
 Si se entra como `SYS` a la CDB, primero hay que cambiar de contenedor:
 
