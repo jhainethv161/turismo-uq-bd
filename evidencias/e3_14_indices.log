@@ -1,0 +1,296 @@
+﻿
+
+
+
+
+
+
+
+
+
+
+
+
+=== Parametros de la prueba ===
+Alojamiento con mas reservas :	       35
+Habitacion con mas lineas    :	      269
+Apellido		     : GIRALDO ARANGO
+Id del estado "completada"   :		4
+
+  RESERVAS     LINEAS	CLIENTES RESERVAS_COMPLETADAS
+---------- ---------- ---------- --------------------
+     25500	29791	    3000		19370
+
+1 row selected.
+
+No errors.
+
+#####################################################################
+##  3. ANTES de crear los indices
+#####################################################################
+
+--- C1 reservas de un alojamiento por fechas  [ANTES] ---
+SELECT r.id, r.fecha_check_in, r.fecha_check_out, r.id_cliente, r.id_estado_reserva
+FROM   reserva r
+WHERE  r.id_alojamiento =	  35
+AND    r.fecha_check_in BETWEEN DATE '2026-07-06' AND DATE
+'2026-07-12'
+ORDER  BY r.fecha_check_in
+Plan hash value: 997889459
+-----------------------------------------------------------
+| Id  | Operation	   | Name    | Rows  | Cost (%CPU)|
+-----------------------------------------------------------
+|   0 | SELECT STATEMENT   |	     |	  13 |	  70   (3)|
+|   1 |  SORT ORDER BY	   |	     |	  13 |	  70   (3)|
+|   2 |   TABLE ACCESS FULL| RESERVA |	  13 |	  69   (2)|
+-----------------------------------------------------------
+>> MEDICION [ANTES]: filas=21  lecturas logicas=206  tiempo promedio=1.182 ms
+
+--- C2 cliente por apellido (UPPER)  [ANTES] ---
+SELECT c.id, c.nombres, c.apellidos, c.correo_electronico
+FROM   cliente c
+WHERE  UPPER(c.apellidos) = 'GIRALDO ARANGO'
+Plan hash value: 1138695813
+----------------------------------------------------------
+| Id  | Operation	  | Name    | Rows  | Cost (%CPU)|
+----------------------------------------------------------
+|   0 | SELECT STATEMENT  |	    |	 30 |	 11   (0)|
+|   1 |  TABLE ACCESS FULL| CLIENTE |	 30 |	 11   (0)|
+----------------------------------------------------------
+>> MEDICION [ANTES]: filas=9  lecturas logicas=46  tiempo promedio=0.705 ms
+
+--- C3 disponibilidad de una habitacion  [ANTES] ---
+SELECT COUNT(*)
+FROM   reserva_habitacion rh
+JOIN   reserva r	  ON r.id   = rh.id_reserva
+JOIN   estado_reserva erh ON erh.id = r.id_estado_reserva
+JOIN   estado_reserva erl ON erl.id =
+rh.id_estado_reserva
+WHERE  rh.id_habitacion =	 269
+AND    UPPER(TRIM(erh.descripcion)) IN ('PENDIENTE', 'CONFIRMADA')
+AND    UPPER(TRIM(erl.descripcion)) IN ('PENDIENTE', 'CONFIRMADA')
+AND
+rh.fecha_check_in  < DATE '2026-11-14'
+AND    rh.fecha_check_out > DATE '2026-11-10'
+Plan hash value: 980156967
+----------------------------------------------------------------------------------------------
+| Id  | Operation			| Name				| Rows	| Cost (%CPU)|
+----------------------------------------------------------------------------------------------
+|   0 | SELECT STATEMENT		|				|     1 |    73   (2)|
+|   1 |  SORT AGGREGATE 		|				|     1 |	     |
+|   2 |   NESTED LOOPS			|				|     1 |    73   (2)|
+|   3 |    NESTED LOOPS 		|				|     1 |    73   (2)|
+|   4 |     NESTED LOOPS		|				|     1 |    72   (2)|
+|   5 |      MERGE JOIN CARTESIAN	|				|     1 |    71   (2)|
+|   6 |       VIEW			| index$_join$_004		|     1 |     2   (0)|
+|   7 |        HASH JOIN		|				|	|	     |
+|   8 | 	INDEX FAST FULL SCAN	| PK_ESTADO_RESERVA		|     1 |     1   (0)|
+|   9 | 	INDEX FAST FULL SCAN	| UK_ESTADO_RESERVA_DESCRIPCION |     1 |     1   (0)|
+|  10 |       BUFFER SORT		|				|     3 |    69   (2)|
+|  11 |        TABLE ACCESS FULL	| RESERVA_HABITACION		|     3 |    69   (2)|
+|  12 |      TABLE ACCESS BY INDEX ROWID| ESTADO_RESERVA		|     1 |     1   (0)|
+|  13 |       INDEX UNIQUE SCAN 	| PK_ESTADO_RESERVA		|     1 |     0   (0)|
+|  14 |     INDEX UNIQUE SCAN		| PK_RESERVA			|     1 |     0   (0)|
+|  15 |    TABLE ACCESS BY INDEX ROWID	| RESERVA			|     1 |     1   (0)|
+----------------------------------------------------------------------------------------------
+>> MEDICION [ANTES]: filas=1  lecturas logicas=253  tiempo promedio=1.428 ms
+
+--- C4 reservas completadas (baja selectividad)  [ANTES] ---
+SELECT r.id, r.id_cliente, r.fecha_check_in, r.fecha_check_out
+FROM   reserva r
+WHERE  r.id_estado_reserva =	      4
+Plan hash value: 3566217236
+----------------------------------------------------------
+| Id  | Operation	  | Name    | Rows  | Cost (%CPU)|
+----------------------------------------------------------
+|   0 | SELECT STATEMENT  |	    | 19370 |	 69   (2)|
+|   1 |  TABLE ACCESS FULL| RESERVA | 19370 |	 69   (2)|
+----------------------------------------------------------
+>> MEDICION [ANTES]: filas=19370  lecturas logicas=19456  tiempo promedio=170.947 ms
+
+--- C5 apellido SIN usar UPPER	[ANTES] ---
+SELECT c.id, c.nombres, c.apellidos, c.correo_electronico
+FROM   cliente c
+WHERE  c.apellidos = INITCAP('GIRALDO ARANGO')
+Plan hash value: 1138695813
+----------------------------------------------------------
+| Id  | Operation	  | Name    | Rows  | Cost (%CPU)|
+----------------------------------------------------------
+|   0 | SELECT STATEMENT  |	    |	  3 |	 11   (0)|
+|   1 |  TABLE ACCESS FULL| CLIENTE |	  3 |	 11   (0)|
+----------------------------------------------------------
+>> MEDICION [ANTES]: filas=9  lecturas logicas=46  tiempo promedio=0.200 ms
+
+=== Indices creados ===
+
+INDEX_NAME
+--------------------------------------------------------------------------------------------------------------------------------
+TABLE_NAME															 UNIQUENES STATUS
+-------------------------------------------------------------------------------------------------------------------------------- --------- --------
+IDX_CLIENTE_APELLIDO_UP
+CLIENTE 															 NONUNIQUE VALID
+
+IDX_RESERVA_ALOJ_CHECKIN
+RESERVA 															 NONUNIQUE VALID
+
+IDX_RESERVA_ESTADO
+RESERVA 															 NONUNIQUE VALID
+
+IDX_RH_HAB_FECHAS
+RESERVA_HABITACION														 NONUNIQUE VALID
+
+
+#####################################################################
+##  5. DESPUES de crear los indices
+#####################################################################
+
+--- C1 reservas de un alojamiento por fechas  [DESPUES] ---
+SELECT r.id, r.fecha_check_in, r.fecha_check_out, r.id_cliente, r.id_estado_reserva
+FROM   reserva r
+WHERE  r.id_alojamiento =	  35
+AND    r.fecha_check_in BETWEEN DATE '2026-07-06' AND DATE
+'2026-07-12'
+ORDER  BY r.fecha_check_in
+Plan hash value: 3694876367
+-------------------------------------------------------------------------------------
+| Id  | Operation		    | Name		       | Rows  | Cost (%CPU)|
+-------------------------------------------------------------------------------------
+|   0 | SELECT STATEMENT	    |			       |    13 |    16	 (0)|
+|   1 |  TABLE ACCESS BY INDEX ROWID| RESERVA		       |    13 |    16	 (0)|
+|   2 |   INDEX RANGE SCAN	    | IDX_RESERVA_ALOJ_CHECKIN |    13 |     2	 (0)|
+-------------------------------------------------------------------------------------
+>> MEDICION [DESPUES]: filas=21  lecturas logicas=44  tiempo promedio=0.360 ms
+
+--- C2 cliente por apellido (UPPER)  [DESPUES] ---
+SELECT c.id, c.nombres, c.apellidos, c.correo_electronico
+FROM   cliente c
+WHERE  UPPER(c.apellidos) = 'GIRALDO ARANGO'
+Plan hash value: 3770452176
+--------------------------------------------------------------------------------------------
+| Id  | Operation			    | Name		      | Rows  | Cost (%CPU)|
+--------------------------------------------------------------------------------------------
+|   0 | SELECT STATEMENT		    |			      |     3 |     5	(0)|
+|   1 |  TABLE ACCESS BY INDEX ROWID BATCHED| CLIENTE		      |     3 |     5	(0)|
+|   2 |   INDEX RANGE SCAN		    | IDX_CLIENTE_APELLIDO_UP |     3 |     1	(0)|
+--------------------------------------------------------------------------------------------
+>> MEDICION [DESPUES]: filas=9	lecturas logicas=20  tiempo promedio=0.137 ms
+
+--- C3 disponibilidad de una habitacion  [DESPUES] ---
+SELECT COUNT(*)
+FROM   reserva_habitacion rh
+JOIN   reserva r	  ON r.id   = rh.id_reserva
+JOIN   estado_reserva erh ON erh.id = r.id_estado_reserva
+JOIN   estado_reserva erl ON erl.id =
+rh.id_estado_reserva
+WHERE  rh.id_habitacion =	 269
+AND    UPPER(TRIM(erh.descripcion)) IN ('PENDIENTE', 'CONFIRMADA')
+AND    UPPER(TRIM(erl.descripcion)) IN ('PENDIENTE', 'CONFIRMADA')
+AND
+rh.fecha_check_in  < DATE '2026-11-14'
+AND    rh.fecha_check_out > DATE '2026-11-10'
+Plan hash value: 2909139697
+--------------------------------------------------------------------------------------------------------
+| Id  | Operation				  | Name			  | Rows  | Cost (%CPU)|
+--------------------------------------------------------------------------------------------------------
+|   0 | SELECT STATEMENT			  |				  |	1 |	8   (0)|
+|   1 |  SORT AGGREGATE 			  |				  |	1 |	       |
+|   2 |   NESTED LOOPS				  |				  |	1 |	8   (0)|
+|   3 |    NESTED LOOPS 			  |				  |	1 |	8   (0)|
+|   4 |     NESTED LOOPS			  |				  |	1 |	7   (0)|
+|   5 |      MERGE JOIN CARTESIAN		  |				  |	1 |	6   (0)|
+|   6 |       VIEW				  | index$_join$_004		  |	1 |	2   (0)|
+|   7 |        HASH JOIN			  |				  |	  |	       |
+|   8 | 	INDEX FAST FULL SCAN		  | PK_ESTADO_RESERVA		  |	1 |	1   (0)|
+|   9 | 	INDEX FAST FULL SCAN		  | UK_ESTADO_RESERVA_DESCRIPCION |	1 |	1   (0)|
+|  10 |       BUFFER SORT			  |				  |	3 |	4   (0)|
+|  11 |        TABLE ACCESS BY INDEX ROWID BATCHED| RESERVA_HABITACION		  |	3 |	4   (0)|
+|  12 | 	INDEX RANGE SCAN		  | IDX_RH_HAB_FECHAS		  |	3 |	1   (0)|
+|  13 |      TABLE ACCESS BY INDEX ROWID	  | ESTADO_RESERVA		  |	1 |	1   (0)|
+|  14 |       INDEX UNIQUE SCAN 		  | PK_ESTADO_RESERVA		  |	1 |	0   (0)|
+|  15 |     INDEX UNIQUE SCAN			  | PK_RESERVA			  |	1 |	0   (0)|
+|  16 |    TABLE ACCESS BY INDEX ROWID		  | RESERVA			  |	1 |	1   (0)|
+--------------------------------------------------------------------------------------------------------
+>> MEDICION [DESPUES]: filas=1	lecturas logicas=8  tiempo promedio=0.213 ms
+
+#####################################################################
+##  6. CASO DONDE EL INDICE NO AYUDA
+#####################################################################
+
+-- Distribucion de RESERVA.ID_ESTADO_RESERVA: por que el indice no sirve
+
+ESTADO		       RESERVAS PORCENTAJE
+-------------------- ---------- ----------
+completada		  19370 	76
+cancelada		   3726       14.6
+confirmada		   1878        7.4
+pendiente		    526        2.1
+
+--- C4 reservas completadas (baja selectividad)  [DESPUES] ---
+SELECT r.id, r.id_cliente, r.fecha_check_in, r.fecha_check_out
+FROM   reserva r
+WHERE  r.id_estado_reserva =	      4
+Plan hash value: 3566217236
+----------------------------------------------------------
+| Id  | Operation	  | Name    | Rows  | Cost (%CPU)|
+----------------------------------------------------------
+|   0 | SELECT STATEMENT  |	    | 19370 |	 69   (2)|
+|   1 |  TABLE ACCESS FULL| RESERVA | 19370 |	 69   (2)|
+----------------------------------------------------------
+>> MEDICION [DESPUES]: filas=19370  lecturas logicas=19456  tiempo promedio=165.493 ms
+
+--- C4b igual a C4 FORZANDO el indice  [DESPUES] ---
+SELECT /*+ INDEX(r idx_reserva_estado) */ r.id, r.id_cliente, r.fecha_check_in, r.fecha_check_out
+FROM   reserva r
+WHERE  r.id_estado_reserva =	      4
+Plan hash value: 2844195752
+---------------------------------------------------------------------------------------
+| Id  | Operation			    | Name		 | Rows  | Cost (%CPU)|
+---------------------------------------------------------------------------------------
+|   0 | SELECT STATEMENT		    |			 | 19370 |   524   (1)|
+|   1 |  TABLE ACCESS BY INDEX ROWID BATCHED| RESERVA		 | 19370 |   524   (1)|
+|   2 |   INDEX RANGE SCAN		    | IDX_RESERVA_ESTADO | 19370 |    38   (0)|
+---------------------------------------------------------------------------------------
+>> MEDICION [DESPUES]: filas=19370  lecturas logicas=38741  tiempo promedio=180.605 ms
+
+--- C5 apellido SIN usar UPPER	[DESPUES] ---
+SELECT c.id, c.nombres, c.apellidos, c.correo_electronico
+FROM   cliente c
+WHERE  c.apellidos = INITCAP('GIRALDO ARANGO')
+Plan hash value: 1138695813
+----------------------------------------------------------
+| Id  | Operation	  | Name    | Rows  | Cost (%CPU)|
+----------------------------------------------------------
+|   0 | SELECT STATEMENT  |	    |	  3 |	 11   (0)|
+|   1 |  TABLE ACCESS FULL| CLIENTE |	  3 |	 11   (0)|
+----------------------------------------------------------
+>> MEDICION [DESPUES]: filas=9	lecturas logicas=46  tiempo promedio=0.257 ms
+
+#####################################################################
+##  7. RESUMEN (lecturas logicas: menos es mejor)
+#####################################################################
+
+CONSULTA					  ANTES  DESPUES MEJORA       MS_ANTES	MS_DESP
+---------------------------------------------- -------- -------- ------------ -------- --------
+C1 reservas de un alojamiento por fechas	    206       44 4.7 veces	 1.182	  0.360
+C2 cliente por apellido (UPPER) 		     46       20 2.3 veces	 0.705	  0.137
+C3 disponibilidad de una habitacion		    253        8 31.6 veces	 1.428	  0.213
+C4 reservas completadas (baja selectividad)	 19,456   19,456 1 veces       170.947	165.493
+C4b igual a C4 FORZANDO el indice			  38,741			180.605
+C5 apellido SIN usar UPPER			     46       46 1 veces	 0.200	  0.257
+
+Lectura del caso donde el indice NO ayuda (C4 / C4b):
+* El estado "completada" agrupa la gran mayoria de las filas. Para leer
+esas filas por el indice, Oracle debe recorrer el indice Y ADEMAS ir a la
+tabla una vez por fila (acceso por ROWID, lecturas de bloque al azar).
+Cuando la consulta necesita casi toda la tabla, leer la tabla de corrido
+(TABLE ACCESS FULL, lecturas multibloque) cuesta menos: por eso el
+optimizador ELIGE el recorrido completo y descarta el indice.
+* Al forzarlo con INDEX() las lecturas logicas SUBEN, no bajan.
+* Regla practica: un indice B-tree ayuda cuando el predicado devuelve una
+fraccion pequena de la tabla (del orden de 5 % o menos), no cuando
+devuelve la mayoria de las filas. Ademas cada indice extra cuesta espacio
+y hace mas lentos los INSERT/UPDATE/DELETE.
+
+Lectura de C5 (UPPER no usado): el indice de funcion solo se usa si la
+consulta contiene la MISMA expresion UPPER(apellidos); sin ella, el
+optimizador no puede usarlo.

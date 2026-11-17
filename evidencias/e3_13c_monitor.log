@@ -1,0 +1,25 @@
+﻿
+=== 1. Quien espera a quien (V$SESSION) ===
+
+   SID USUARIO	    ESTADO    EVENTO				     BLOQUEADA_POR SEG_ESPERANDO SQL_TEXTO
+------ ------------ --------- -------------------------------------- ------------- ------------- ------------------------------------------------------------
+   193 TURISMOUQ    ACTIVE    PL/SQL lock timer 					      11 BEGIN DBMS_SESSION.SLEEP(13); END;
+   212 TURISMOUQ    ACTIVE    enq: TX - row lock contention		       193	       7 SELECT id FROM habitacion WHERE id = :1 FOR UPDATE WAIT 60
+
+
+=== 2. Bloqueos de fila (TX) y de tabla (TM): REQUEST > 0 = esta esperando ===
+
+   SID TIPO  MODO_RETENIDO  MODO_PEDIDO    OBJETO
+------ ----- -------------- -------------- ----------------------
+   212 TX    ninguno	    exclusive (X)
+   193 TM    row-X (RX)     ninguno	   RESERVA
+   193 TM    row-X (RX)     ninguno	   HABITACION
+   193 TM    row-X (RX)     ninguno	   RESERVA_HABITACION
+   193 TX    exclusive (X)  ninguno
+   212 TM    row-X (RX)     ninguno	   HABITACION
+
+6 rows selected.
+
+
+Lectura: la sesion con REQUEST > 0 en TX es la que esta esperando; su columna
+bloqueada_por (consulta 1) es el SID de la sesion A, que retiene la fila de HABITACION.

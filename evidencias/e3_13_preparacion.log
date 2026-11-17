@@ -1,0 +1,36 @@
+﻿
+PL/SQL procedure successfully completed.
+
+
+PL/SQL procedure successfully completed.
+
+
+1 row created.
+
+
+78 rows created.
+
+
+Commit complete.
+
+
+=== Procedimientos de la fase DESPUES (creados en el script 12) ===
+
+OBJECT_NAME
+--------------------------------------------------------------------------------
+STATUS
+-------
+SP_CREAR_RESERVA_SEGURA
+VALID
+
+SP_RESERVAR_Y_PAGAR
+VALID
+
+
+
+=== Habitacion de prueba ===
+
+	ID NUMERO     ID_ALOJAMIENTO	TARIFAS
+---------- ---------- -------------- ----------
+       538 ZZ-CONC		   1	     78
+

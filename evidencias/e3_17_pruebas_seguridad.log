@@ -1,0 +1,60 @@
+Clave de los usuarios de demostracion: Servicio de la PDB [localhost:1521/FREEPDB1]: Habitaciones en total: 535 | de Ospina: 5 | de Restrepo: 4
+
+===== RECEPCION (rec_prueba) =====
+Lee V_REC_RESERVAS (permitido)				      OK
+Lee V_REC_CLIENTES (permitido)				      OK
+Lee V_REC_HABITACIONES (permitido)			      OK
+SELECT sobre la TABLA reserva				      OK
+SELECT sobre la TABLA cliente				      OK
+SELECT sobre la TABLA pago				      OK
+SELECT sobre la TABLA tarifa				      OK
+INSERT en la TABLA reserva				      OK
+DELETE en la TABLA cliente				      OK
+UPDATE sobre la VISTA v_rec_clientes (solo lectura)	      OK
+Lee la tabla de auditoria				      OK
+Lee las vistas del gerente (V_GER_INGRESOS)		      OK
+Ejecuta SP_RESERVAR_Y_PAGAR (cliente inexistente -> ORA-20006)OK
+Ejecuta PKG_TURISMO directamente (no concedido) 	      OK
+
+===== ADMINISTRADOR DE ALOJAMIENTO (enc_ospina) =====
+Ve SOLO sus habitaciones (5 de 535)			      OK
+Lee V_ADM_RESERVAS (permitido)				      OK
+Actualiza el valor de una tarifa PROPIA 		      OK
+Actualiza tarifa de OTRO alojamiento (0 filas afectadas)      OK
+Cambia la habitacion de una tarifa (columna no concedida)     OK
+DELETE sobre v_adm_tarifas				      OK
+INSERT sobre v_adm_tarifas				      OK
+SELECT sobre la TABLA tarifa				      OK
+SELECT sobre la TABLA reserva				      OK
+Lee las vistas de recepcion (V_REC_RESERVAS)		      OK
+Lee las vistas del auditor (V_AUD_PAGOS)		      OK
+
+===== ADMINISTRADOR DE ALOJAMIENTO (enc_restrepo): otro alojamiento, otros datos =====
+Ve SOLO sus habitaciones (4)				      OK
+No ve las tarifas del alojamiento de Ospina		      OK
+
+===== ENCARGADO INACTIVO (enc_marin, activo = N): conecta pero no ve nada =====
+Encargado inactivo: habitaciones=0, reservas=0		      OK
+
+===== GERENTE (ger_prueba) =====
+Lee V_GER_OCUPACION (permitido) 			      OK
+Lee V_GER_INGRESOS (permitido)				      OK
+Lee V_GER_CALIFICACIONES (permitido)			      OK
+SELECT sobre la TABLA liquidacion_mensual		      OK
+SELECT sobre la vista MV_OCUPACION_MENSUAL		      OK
+DELETE sobre v_ger_ingresos				      OK
+Lee datos de pagos (V_AUD_PAGOS)			      OK
+Lee clientes (V_REC_CLIENTES)				      OK
+
+===== AUDITOR (aud_prueba) =====
+Lee V_AUD_AUDITORIA_TARIFA (permitido)			      OK
+Lee V_AUD_PAGOS (permitido)				      OK
+Lee V_AUD_RESERVAS (permitido)				      OK
+DELETE sobre v_aud_auditoria_tarifa (borrar la auditoria)     OK
+UPDATE sobre v_aud_pagos				      OK
+SELECT sobre la TABLA auditoria_tarifa			      OK
+SELECT sobre la TABLA pago				      OK
+Lee vistas del gerente (V_GER_INGRESOS) 		      OK
+Ejecuta SP_RESERVAR_Y_PAGAR				      OK
+
+Pruebas de seguridad terminadas. Buscar en la salida: ningun FALLA.

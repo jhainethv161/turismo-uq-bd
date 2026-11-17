@@ -1,0 +1,104 @@
+
+PL/SQL procedure successfully completed.
+
+
+===== SESION A =====
+
+SESION
+--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+USUARIO
+--------------------------------------------------------------------------------------------------------------------------------
+193
+TURISMOUQ
+
+
+Reservas de prueba borradas: 0
+
+PL/SQL procedure successfully completed.
+
+
+##### FASE 1 - ANTES (sin bloqueo) #####
+
+=== A1. Sesion A reserva la habitacion ZZ-CONC del 10 al 13 de diciembre de 2026 ===
+A1: reserva 25526 creada por A (SIN COMMIT todavia)
+
+PL/SQL procedure successfully completed.
+
+
+
+PL/SQL procedure successfully completed.
+
+
+=== A2. Sesion A confirma ===
+
+Commit complete.
+
+A2: COMMIT hecho por A
+
+
+PL/SQL procedure successfully completed.
+
+
+=== Resultado de la fase ANTES: lineas ACTIVAS de la habitacion de prueba ===
+
+ID_RESERVA FECHA_CHE FECHA_CHE ESTADO
+---------- --------- --------- ------------
+     25526 10-DEC-26 13-DEC-26 PENDIENTE
+     25527 10-DEC-26 13-DEC-26 PENDIENTE
+
+
+NOCHE	  RESERVAS_ESA_NOCHE PROBLEMA
+--------- ------------------ ----------------
+10-DEC-26		   2 << DOBLE RESERVA
+11-DEC-26		   2 << DOBLE RESERVA
+12-DEC-26		   2 << DOBLE RESERVA
+
+
+
+PL/SQL procedure successfully completed.
+
+Reservas de prueba borradas: 2
+
+PL/SQL procedure successfully completed.
+
+
+##### FASE 2 - DESPUES (SELECT ... FOR UPDATE) #####
+
+=== A3. Sesion A reserva con bloqueo de la habitacion (sin COMMIT) ===
+A3: reserva 25528 creada por A. A RETIENE el bloqueo de la habitacion.
+
+PL/SQL procedure successfully completed.
+
+
+>>> Ahora, en la sesion B, ejecute el paso B3: B quedara ESPERANDO.
+>>> En la ventana 3 ejecute 13c_monitor_bloqueos.sql y capture el bloqueo.
+
+PL/SQL procedure successfully completed.
+
+
+=== A4. Sesion A confirma: se libera el bloqueo y B continua ===
+
+Commit complete.
+
+A4: COMMIT hecho por A. Mire la ventana de la sesion B.
+
+
+PL/SQL procedure successfully completed.
+
+
+=== Resultado de la fase DESPUES: lineas de la habitacion de prueba ===
+
+ID_RESERVA FECHA_CHE FECHA_CHE ESTADO
+---------- --------- --------- ------------
+     25528 10-DEC-26 13-DEC-26 PENDIENTE
+
+
+NOCHE	  RESERVAS_ESA_NOCHE
+--------- ------------------
+10-DEC-26		   1
+11-DEC-26		   1
+12-DEC-26		   1
+
+
+Esperado: UNA sola reserva y 1 reserva por noche (sin doble reserva).
+Para dejar la base limpia ejecute 13e_limpieza_total.sql

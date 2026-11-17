@@ -1,0 +1,55 @@
+﻿
+Procedure created.
+
+No errors.
+
+Procedure created.
+
+No errors.
+
+=== P0. Datos de la demostracion ===
+Habitacion : 6
+Cliente    : 1
+Estadia    : 2026-12-20 a 2026-12-23
+Valor	   : 2400000
+
+PL/SQL procedure successfully completed.
+
+
+=== D1. Reserva + pago completo (camino feliz) ===
+[traza] reserva 25523 creada en estado PENDIENTE
+[traza] pago 36094 insertado por 2400000
+[traza] pagos visibles dentro de la transaccion: 1
+resultado: RESERVA CONFIRMADA Y PAGADA
+reserva=CONFIRMADA, pago_total=PAGADO, pagos=1
+D1 OK
+
+PL/SQL procedure successfully completed.
+
+
+=== D2. ROLLBACK PARCIAL: el pago falla, la reserva se conserva ===
+[traza] reserva 25524 creada en estado PENDIENTE
+[traza] pago 36095 insertado por 4800000
+[traza] pagos visibles dentro de la transaccion: 1
+[traza] rollback parcial a sp_rp_reserva_ok
+resultado: RESERVA PENDIENTE SIN PAGO. Motivo: ORA-20031: El pago excede lo que se debe: total 2400000, pagado con este pago 4800000
+reserva=PENDIENTE, pago_total=PENDIENTE, pagos despues del rollback=0
+D2 OK
+
+PL/SQL procedure successfully completed.
+
+
+=== D3. ROLLBACK TOTAL: falla el pago y no queda nada ===
+[traza] reserva 25525 creada en estado PENDIENTE
+[traza] rollback total a sp_rp_inicio
+error recibido: ORA-20030: El metodo de pago -999 no existe
+lineas antes=2, despues=2
+D3 OK
+
+PL/SQL procedure successfully completed.
+
+
+Rollback complete.
+
+
+Demostracion terminada: ROLLBACK ejecutado, no quedan datos de prueba.

@@ -1,0 +1,68 @@
+Clave de los usuarios de demostracion: Servicio de la PDB [localhost:1521/FREEPDB1]: Conexion DBA (usuario/clave@servicio): 
+=== Estado inicial de AUD_PRUEBA ===
+
+USERNAME       ACCOUNT_STATUS
+-------------- ----------------
+AUD_PRUEBA     OPEN
+
+=== Prueba 1. Tres claves erroneas seguidas (se esperan 3 x ORA-01017) ===
+ERROR:
+ORA-01017: invalid credential or not authorized; logon denied
+Help: https://docs.oracle.com/error-help/db/ora-01017/
+
+
+Warning: You are no longer connected to ORACLE.
+ERROR:
+ORA-01017: invalid credential or not authorized; logon denied
+Help: https://docs.oracle.com/error-help/db/ora-01017/
+
+
+ERROR:
+ORA-01017: invalid credential or not authorized; logon denied
+Help: https://docs.oracle.com/error-help/db/ora-01017/
+
+
+
+=== Cuarto intento con la clave CORRECTA: debe responder ORA-28000 (cuenta bloqueada) ===
+ERROR:
+ORA-28000: The account is locked; login denied.
+Help: https://docs.oracle.com/error-help/db/ora-28000/
+
+
+
+=== Estado de la cuenta despues de los intentos (esperado LOCKED(TIMED)) ===
+
+USERNAME       ACCOUNT_STATUS	LOCK_DATE
+-------------- ---------------- --------------------
+AUD_PRUEBA     LOCKED(TIMED)	2026-11-16 23:59:59
+
+=== El DBA desbloquea la cuenta ===
+
+USERNAME       ACCOUNT_STATUS
+-------------- ----------------
+AUD_PRUEBA     OPEN
+
+=== Despues de desbloquear, la clave correcta entra ===
+
+CONECTADO_COMO
+--------------------------------------------------------------------------------------------------------------------------------
+AUD_PRUEBA
+
+=== Prueba 2. SESSIONS_PER_USER = 2 (procedimiento manual) ===
+1) Abrir tres ventanas de SQL*Plus.
+2) En cada una:  CONNECT rec_prueba/clave@localhost:1521/FREEPDB1
+3) Las dos primeras entran; la TERCERA responde:
+ORA-02391: exceeded simultaneous SESSIONS_PER_USER limit
+4) Verificacion desde el DBA:
+SELECT username, COUNT(*) FROM v$session
+WHERE username = 'REC_PRUEBA' GROUP BY username
+
+Limites vigentes del perfil:
+
+RESOURCE_NAME		   LIMIT
+-------------------------- ------------
+CONNECT_TIME		   480
+FAILED_LOGIN_ATTEMPTS	   3
+IDLE_TIME		   30
+PASSWORD_LOCK_TIME	   .0416
+SESSIONS_PER_USER	   2

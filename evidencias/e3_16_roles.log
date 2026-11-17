@@ -1,0 +1,186 @@
+
+Session altered.
+
+Clave para los usuarios de demostracion: 
+PL/SQL procedure successfully completed.
+
+
+Profile created.
+
+
+Role created.
+
+
+Role created.
+
+
+Role created.
+
+
+Role created.
+
+
+Grant succeeded.
+
+
+Grant succeeded.
+
+
+Grant succeeded.
+
+
+Grant succeeded.
+
+
+Grant succeeded.
+
+
+Grant succeeded.
+
+
+Grant succeeded.
+
+
+Grant succeeded.
+
+
+Grant succeeded.
+
+
+Grant succeeded.
+
+
+Grant succeeded.
+
+
+Grant succeeded.
+
+
+Grant succeeded.
+
+
+Grant succeeded.
+
+
+Grant succeeded.
+
+
+Grant succeeded.
+
+
+Grant succeeded.
+
+
+Grant succeeded.
+
+
+Grant succeeded.
+
+
+User created.
+
+
+User created.
+
+
+User created.
+
+
+User created.
+
+
+User created.
+
+
+User created.
+
+
+Grant succeeded.
+
+
+Grant succeeded.
+
+
+Grant succeeded.
+
+
+Grant succeeded.
+
+
+=== Perfil y limites ===
+
+RESOURCE_NAME		   LIMIT
+-------------------------- ------------
+COMPOSITE_LIMIT 	   DEFAULT
+CONNECT_TIME		   480
+CPU_PER_CALL		   6000
+CPU_PER_SESSION 	   DEFAULT
+IDLE_TIME		   30
+LOGICAL_READS_PER_CALL	   5000000
+LOGICAL_READS_PER_SESSION  DEFAULT
+PRIVATE_SGA		   DEFAULT
+SESSIONS_PER_USER	   2
+FAILED_LOGIN_ATTEMPTS	   3
+INACTIVE_ACCOUNT_TIME	   DEFAULT
+PASSWORD_GRACE_TIME	   7
+PASSWORD_LIFE_TIME	   90
+PASSWORD_LOCK_TIME	   .0416
+PASSWORD_REUSE_MAX	   UNLIMITED
+PASSWORD_REUSE_TIME	   180
+PASSWORD_ROLLOVER_TIME	   DEFAULT
+PASSWORD_VERIFY_FUNCTION   DEFAULT
+
+18 rows selected.
+
+
+=== Usuarios de demostracion ===
+
+USERNAME       PROFILE		ACCOUNT_STATUS			 GRANTED_ROLE
+-------------- ---------------- -------------------------------- --------------------------------------------------------------------------------------------------------------------------------
+AUD_PRUEBA     PERFIL_TURISMO	OPEN				 ROL_AUDITOR
+ENC_MARIN      PERFIL_TURISMO	OPEN				 ROL_ADMIN_ALOJAMIENTO
+ENC_OSPINA     PERFIL_TURISMO	OPEN				 ROL_ADMIN_ALOJAMIENTO
+ENC_RESTREPO   PERFIL_TURISMO	OPEN				 ROL_ADMIN_ALOJAMIENTO
+GER_PRUEBA     PERFIL_TURISMO	OPEN				 ROL_GERENTE
+REC_PRUEBA     PERFIL_TURISMO	OPEN				 ROL_RECEPCION
+
+6 rows selected.
+
+
+=== Privilegios de cada rol (matriz) ===
+
+GRANTEE 		 PRIVILEGE	  TABLE_NAME		     COLUMNA
+------------------------ ---------------- -------------------------- ------------
+ROL_ADMIN_ALOJAMIENTO	 SELECT 	  V_ADM_HABITACIONES
+ROL_ADMIN_ALOJAMIENTO	 SELECT 	  V_ADM_RESENAS
+ROL_ADMIN_ALOJAMIENTO	 SELECT 	  V_ADM_RESERVAS
+ROL_ADMIN_ALOJAMIENTO	 SELECT 	  V_ADM_TARIFAS
+ROL_ADMIN_ALOJAMIENTO	 UPDATE 	  V_ADM_TARIFAS 	     VALOR_NOCHE
+ROL_AUDITOR		 SELECT 	  V_AUD_AUDITORIA_TARIFA
+ROL_AUDITOR		 SELECT 	  V_AUD_PAGOS
+ROL_AUDITOR		 SELECT 	  V_AUD_RESERVAS
+ROL_GERENTE		 SELECT 	  V_GER_CALIFICACIONES
+ROL_GERENTE		 SELECT 	  V_GER_INGRESOS
+ROL_GERENTE		 SELECT 	  V_GER_OCUPACION
+ROL_RECEPCION		 EXECUTE	  SP_RESERVAR_Y_PAGAR
+ROL_RECEPCION		 SELECT 	  V_REC_CLIENTES
+ROL_RECEPCION		 SELECT 	  V_REC_HABITACIONES
+ROL_RECEPCION		 SELECT 	  V_REC_RESERVAS
+
+15 rows selected.
+
+
+=== Privilegios de sistema de los roles (solo CREATE SESSION) ===
+
+GRANTEE 		 PRIVILEGE
+------------------------ ----------------
+ROL_ADMIN_ALOJAMIENTO	 CREATE SESSION
+ROL_AUDITOR		 CREATE SESSION
+ROL_GERENTE		 CREATE SESSION
+ROL_RECEPCION		 CREATE SESSION
+
+
+=== Comprobacion clave: ningun rol tiene privilegios sobre TABLAS (esperado: 0 filas) ===
+
+no rows selected
+

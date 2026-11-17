@@ -1,0 +1,70 @@
+
+PL/SQL procedure successfully completed.
+
+Elapsed: 00:00:00.01
+
+===== SESION B =====
+
+SESION
+--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+USUARIO
+--------------------------------------------------------------------------------------------------------------------------------
+212
+TURISMOUQ
+
+
+Elapsed: 00:00:00.00
+
+##### FASE 1 - ANTES (sin bloqueo) #####
+
+
+PL/SQL procedure successfully completed.
+
+Elapsed: 00:00:04.01
+
+=== B1. Sesion B reserva LA MISMA habitacion y fechas (A todavia no hizo COMMIT) ===
+B1: reserva 25527 creada por B. NO hubo bloqueo ni error.
+
+PL/SQL procedure successfully completed.
+
+Elapsed: 00:00:00.00
+
+>>> Vuelva a la sesion A y pulse ENTER alli (paso A2: COMMIT de A).
+
+PL/SQL procedure successfully completed.
+
+Elapsed: 00:00:08.00
+
+=== B2. Sesion B confirma ===
+
+Commit complete.
+
+Elapsed: 00:00:00.01
+B2: COMMIT hecho por B	->  la habitacion quedo reservada DOS veces.
+>>> Vuelva a la sesion A (ENTER) para ver el resultado de la fase ANTES.
+
+##### FASE 2 - DESPUES (SELECT ... FOR UPDATE) #####
+
+
+PL/SQL procedure successfully completed.
+
+Elapsed: 00:00:08.00
+
+=== B3. Sesion B intenta reservar la misma habitacion: debe quedar ESPERANDO ===
+(el prompt no vuelve hasta que A haga COMMIT; espera maxima 60 s)
+B3: B fue RECHAZADA -> ORA-20005: La habitacion 538 no esta disponible entre el 2026-12-10 y el 2026-12-13
+
+PL/SQL procedure successfully completed.
+
+Elapsed: 00:00:09.01
+
+=== B4. Resultado para B (observe el tiempo transcurrido arriba: es lo que B espero a A) ===
+
+RESERVAS_DE_B_EN_LA_HABITACION
+------------------------------
+			     0
+
+Elapsed: 00:00:00.01
+
+Esperado: ORA-20005 (habitacion no disponible) y 0 reservas de B.
+>>> Vuelva a la sesion A (ENTER) para ver el resultado final.

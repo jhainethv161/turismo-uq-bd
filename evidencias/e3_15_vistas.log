@@ -1,0 +1,117 @@
+﻿
+View created.
+
+
+Comment created.
+
+
+View created.
+
+
+View created.
+
+
+View created.
+
+
+View created.
+
+
+View created.
+
+
+View created.
+
+
+View created.
+
+
+View created.
+
+
+View created.
+
+
+View created.
+
+
+View created.
+
+
+View created.
+
+
+View created.
+
+
+=== Vistas de seguridad (todas deben estar VALID) ===
+
+OBJECT_NAME
+--------------------------------------------------------------------------------
+STATUS
+-------
+V_ADM_HABITACIONES
+VALID
+
+V_ADM_RESENAS
+VALID
+
+V_ADM_RESERVAS
+VALID
+
+
+OBJECT_NAME
+--------------------------------------------------------------------------------
+STATUS
+-------
+V_ADM_TARIFAS
+VALID
+
+V_AUD_AUDITORIA_TARIFA
+VALID
+
+V_AUD_PAGOS
+VALID
+
+
+OBJECT_NAME
+--------------------------------------------------------------------------------
+STATUS
+-------
+V_AUD_RESERVAS
+VALID
+
+V_GER_CALIFICACIONES
+VALID
+
+V_GER_INGRESOS
+VALID
+
+
+OBJECT_NAME
+--------------------------------------------------------------------------------
+STATUS
+-------
+V_GER_OCUPACION
+VALID
+
+V_MI_ALOJAMIENTO
+VALID
+
+V_REC_CLIENTES
+VALID
+
+
+OBJECT_NAME
+--------------------------------------------------------------------------------
+STATUS
+-------
+V_REC_HABITACIONES
+VALID
+
+V_REC_RESERVAS
+VALID
+
+
+14 rows selected.
+
