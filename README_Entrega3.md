@@ -24,13 +24,10 @@ Se ejecutan **después** de los scripts `01` a `10` (ver `README_Entrega2.md`).
 | 14 | `14_indices.sql` | dueño | 3 consultas lentas, planes antes/después, caso donde el índice no ayuda |
 | 15 | `15_vistas_seguridad.sql` | dueño | 14 vistas de seguridad (una familia por rol) |
 | 16 | `16_roles_usuarios_perfil.sql` | **DBA** en la PDB | 4 roles, perfil con límites y usuarios de demostración |
-| 17 | `17_pruebas_seguridad.sql` | dueño | 44 pruebas `OK`/`FALLA` conectándose como cada usuario |
-| 17b | `17b_pruebas_perfil.sql` | **DBA** en la PDB | Bloqueo por claves erróneas y límite de sesiones |
 
 Los scripts `11`, `12`, `13`, `14`, `15` y `16` corren de arriba abajo en una base limpia y se
 pueden repetir sin error. `13a/13b/13c` son interactivos (dos sesiones a la vez) y no hacen
-parte de la corrida lineal; `17` y `17b` piden la clave de los usuarios de demostración por
-pantalla (no se guarda ninguna clave en el repositorio).
+parte de la corrida lineal.
 
 ```text
 -- DBA, en la PDB
@@ -45,9 +42,7 @@ pantalla (no se guarda ninguna clave en el repositorio).
 -- DBA, en la PDB
 @scripts/16_roles_usuarios_perfil.sql
 
--- Dueño, luego DBA
-@scripts/17_pruebas_seguridad.sql
-@scripts/17b_pruebas_perfil.sql
+
 ```
 
 Evidencia de la ejecución real en `evidencias/e3_*.log`.
@@ -204,7 +199,7 @@ función solo se usa si la consulta contiene la misma expresión.
 
 ---
 
-## 6. Seguridad (scripts 15, 16, 17, 17b)
+## 6. Seguridad (scripts 15, 16)
 
 ### 6.1 Diseño
 
@@ -285,10 +280,6 @@ funciona y lo prohibido falla con el error esperado: **44 pruebas, 0 `FALLA`**
    bloqueo; por eso a recepción solo se le concede `EXECUTE` sobre `SP_RESERVAR_Y_PAGAR`.
 3. Las mejoras de C1 y C2 son moderadas porque las tablas tienen decenas de miles de filas;
    con el crecimiento real de la plataforma la diferencia aumenta.
-4. La prueba de `SESSIONS_PER_USER` es manual (necesita tres ventanas); el procedimiento está en
-   `17b_pruebas_perfil.sql`.
-5. No se definió `PASSWORD_VERIFY_FUNCTION` para no complicar las claves de demostración; en
-   producción conviene activarla.
 
 ---
 
@@ -306,8 +297,6 @@ scripts/13e_limpieza_total.sql
 scripts/14_indices.sql
 scripts/15_vistas_seguridad.sql
 scripts/16_roles_usuarios_perfil.sql
-scripts/17_pruebas_seguridad.sql
-scripts/17b_pruebas_perfil.sql
 evidencias/e3_*.log
 README_Entrega3.md
 ```
