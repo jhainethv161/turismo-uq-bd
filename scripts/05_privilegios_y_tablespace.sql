@@ -10,6 +10,7 @@
    un usuario normal no puede crear tablespaces ni darse privilegios.
    ===================================================================== */
 
+SET DEFINE ON
 SET SERVEROUTPUT ON
 SET VERIFY OFF
 SET SQLBLANKLINES ON
